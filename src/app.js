@@ -9,9 +9,7 @@ const theatersRouter = require("./theaters/theaters.router");
 const errorHandler = require("./utils/errors/errorHandler");
 const notFound = require("./utils/errors/notFound");
 
-app.use(cors({ 
-    origin: "*",
- }));
+app.use(cors({ origin: "https://frontend-ko0r.onrender.com" }));
 app.use(express.json());
 
 // const router = express.Router();

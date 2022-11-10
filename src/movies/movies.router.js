@@ -3,6 +3,9 @@ const controller = require("./movies.controller");
 const reviewsRouter = require("../reviews/reviews.router");
 const theatersRouter = require("../theaters/theaters.router");
 const methodNotAllowed = require("../utils/errors/methodNotAllowed");
+const cors = require("cors");
+
+// router.use(cors());
 
 // Checks for a specific movie in theaters
 router.use("/:movieId/theaters", controller.movieExists, theatersRouter);

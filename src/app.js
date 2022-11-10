@@ -17,7 +17,7 @@ router.get("/", cors(), (req, res) => {
     res.json({ message: "Welcome! You can access the data using these routes: /movies, /movies/:movieId, /reviews, /reviews/:reviewId, /theaters, movies/:movieId/reviews, /movies/:movieId/reviews/:reviewId" })
 })
 
-app.use("/", router);
+// app.use("/", router);
 
 app.use("/movies", moviesRouter);
 app.use("/reviews", reviewsRouter);

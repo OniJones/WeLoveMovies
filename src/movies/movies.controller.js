@@ -1,26 +1,40 @@
-const service = require("./movies.service");
+const moviesService = require("../movies/movies.service");
+
 const asyncErrorBoundary = require("../utils/errors/asyncErrorBoundary");
 
-// Middleware
+// Checks if movie exists
+async function movieExists(req, res, next) {
+	const { movieId } = req.params;
+	const movie = await moviesService.read(movieId);
+	if (movie) {
+		res.locals.movie = movie;
+		res.locals.movieId = movieId;
+		return next();
+	}
+	return next({
+		status: 404,
+		message: `A movie with the ID of ${movieId} cannot be found.`,
+	});
+}
 
-const paramsCheck = async (req, res, next) => {
-    const { movieId } = req.params;
-    const match = await service.read(Number(movieId));
-    if (match.length === 0 || !movieId)
-        return next({
-            status: 404,
-            message: `movieId: ${movieId} does not exist in the databass`,
-        });
-    res.locals.movie = match[0];
-    next();
-};
+// Lists all of the movies
+async function list(req, res, next) {
+	const { is_showing } = req.query;
+	if (is_showing) {
+		const movieList = await moviesService.listShowingMovies(true);
+		res.json({ data: movieList });
+	}
+	const movieList = await moviesService.listAllMovies();
+	res.json({ data: movieList });
+}
+
+async function read(req, res, next) {
+	const { movie } = res.locals;
+	res.json({ data: movie });
+}
 
 module.exports = {
-    read: [asyncErrorBoundary(paramsCheck)],
-    listReviews: [
-        asyncErrorBoundary(paramsCheck)
-    ],
-    listTheaters: [
-        asyncErrorBoundary(paramsCheck)
-    ],
+	list: asyncErrorBoundary(list),
+	read: [asyncErrorBoundary(movieExists), read],
+	movieExists,
 };

@@ -1,16 +1,16 @@
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
 const controller = require("./reviews.controllers");
 const methodNotAllowed = require("../utils/errors/methodNotAllowed");
 
 router
     .route("/:reviewId")
-    .get(controller.read)
-    .put(controller.put)
+    .put(controller.update)
     .delete(controller.delete)
     .all(methodNotAllowed);
 
 router
     .route("/")
+    .get(controller.list)
     .all(methodNotAllowed);
 
 module.exports = router;
